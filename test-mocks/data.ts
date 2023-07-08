@@ -1,4 +1,4 @@
-import { Product } from "@/types";
+import { CartProduct, Product } from "@/types";
 export const productsData: Product[] = [
   {
     id: 1,
@@ -37,5 +37,16 @@ export const productsData: Product[] = [
       "https://i.dummyjson.com/data/products/2/3.jpg",
       "https://i.dummyjson.com/data/products/2/thumbnail.jpg",
     ],
+  },
+];
+
+export const cartData: CartProduct[] = [
+  {
+    ...productsData[0],
+    quantity: 1,
+  },
+  {
+    ...productsData[1],
+    quantity: 3,
   },
 ];

@@ -20,6 +20,7 @@ const StarRating: FC<RatingProps> = ({ rating = 0 }) => {
         size={19}
         className={"fill-current text-yellow-500"}
         key={`full_${i}`}
+        data-testid="full-star"
       />
     );
   }
@@ -31,12 +32,13 @@ const StarRating: FC<RatingProps> = ({ rating = 0 }) => {
         className={"fill-current text-yellow-500"}
         key={`half_${i}`}
         style={{ transform: "scaleX(1)" }}
+        data-testid="half-star"
       />
     );
   }
 
   for (let i = 0; i < emptyStars; i++) {
-    stars.push(<Star size={19} />);
+    stars.push(<Star size={19} data-testid="empty-star" key={i} />);
   }
 
   return (
