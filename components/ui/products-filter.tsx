@@ -117,6 +117,10 @@ const StarsFilter: FC<{
 }> = ({ value, onChange }) => {
   const [isPending, startTransition] = React.useTransition();
 
+  function isStarActive(star: number, value: number) {
+    return value && star <= value;
+  }
+
   const handleOnClick = (star: number) => {
     startTransition(() => {
       onChange(star);
@@ -132,12 +136,12 @@ const StarsFilter: FC<{
             key={star}
             onClick={() => handleOnClick(star)}
             className={`text-lg cursor-pointer ${
-              value && star <= value ? "text-yellow-500" : "text-gray-300"
+              isStarActive(star, value) ? "text-yellow-500" : "text-gray-300"
             }`}
           >
             <Star
               className={
-                value && star <= value ? "fill-current text-yellow-500" : ""
+                isStarActive(star, value) ? "fill-current text-yellow-500" : ""
               }
             />
           </button>
@@ -153,12 +157,17 @@ const ProductsFilter: FC<FilterProps> = ({ categories, priceRange }) => {
   const searchParams = useSearchParams();
   const current = qs.parse(searchParams.toString());
 
-  const handleCategoryChange = useCallback(
-    (category: string) => {
+  const handleQueryChange = useCallback(
+    (newQueryValues: {
+      category?: string;
+      price?: PriceRangeFilterProps["value"];
+      stars?: number;
+    }) => {
       const query = {
         ...current,
-        category,
+        ...newQueryValues,
       };
+
       const url = qs.stringifyUrl(
         {
           url: window.location.href,
@@ -166,6 +175,7 @@ const ProductsFilter: FC<FilterProps> = ({ categories, priceRange }) => {
         },
         { skipNull: true }
       );
+
       /**
        * @todo this is triggering multiple renders.
        */
@@ -174,40 +184,16 @@ const ProductsFilter: FC<FilterProps> = ({ categories, priceRange }) => {
     [current, router]
   );
 
-  const handlePriceChange = useCallback(
-    (price: PriceRangeFilterProps["value"]) => {
-      const query = {
-        ...current,
-        price,
-      };
-      const url = qs.stringifyUrl(
-        {
-          url: window.location.href,
-          query,
-        },
-        { skipNull: true }
-      );
-      /**
-       * @todo this is triggering multiple renders.
-       */
-      router.push(url);
-    },
-    [current, router]
-  );
+  const handleCategoryChange = (category: string) => {
+    handleQueryChange({ category });
+  };
+
+  const handlePriceChange = (price: PriceRangeFilterProps["value"]) => {
+    handleQueryChange({ price });
+  };
 
   const handleStarsChange = (stars: number) => {
-    const query = {
-      ...current,
-      stars,
-    };
-    const url = qs.stringifyUrl(
-      {
-        url: window.location.href,
-        query,
-      },
-      { skipNull: true }
-    );
-    router.push(url);
+    handleQueryChange({ stars });
   };
 
   return (
