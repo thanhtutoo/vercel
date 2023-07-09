@@ -22,28 +22,32 @@ const getUrl = (category?: string) => {
 };
 
 const getProducts = async (query: Query): Promise<Product[]> => {
-  const url = qs.stringifyUrl({
-    url: getUrl(query.category),
-    query: {
-      limit: query.limit,
-      skip: query.skip,
-    },
-  });
-  const res = await fetch(url);
+  try {
+    const url = qs.stringifyUrl({
+      url: getUrl(query.category),
+      query: {
+        limit: query.limit,
+        skip: query.skip,
+      },
+    });
+    const res = await fetch(url);
 
-  if (res.ok) {
-    const { products } = await res.json();
-    let filtered = [...products];
-    if (query.stars) {
-      filtered = filterProductsByRating(filtered, Number(query.stars));
+    if (res.ok) {
+      const { products } = await res.json();
+      let filtered = [...products];
+      if (query.stars) {
+        filtered = filterProductsByRating(filtered, Number(query.stars));
+      }
+
+      if (Array.isArray(query.price)) {
+        filtered = filterProductsByPriceRange(filtered, query.price);
+      }
+
+      return filtered;
+    } else {
+      return [];
     }
-
-    if (Array.isArray(query.price)) {
-      filtered = filterProductsByPriceRange(filtered, query.price);
-    }
-
-    return filtered;
-  } else {
+  } catch (error) {
     return [];
   }
 };
