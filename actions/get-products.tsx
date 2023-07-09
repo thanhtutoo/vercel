@@ -14,7 +14,7 @@ interface Query {
 }
 
 const getUrl = (category?: string) => {
-  let URL = `${process.env.NEXT_PUBLIC_API_URL}/api/products`;
+  let URL = `${process.env.NEXT_PUBLIC_API_URL}/products`;
   if (category && category !== "all") {
     URL = URL + `/category/${category}`;
   }
