@@ -13,6 +13,9 @@ const HomePage = async ({
   const products = await getProducts({ limit: 50, skip: 0, ...searchParams });
   const categories = await getCategories();
   const priceRange = getProductsPriceRange(products);
+  if (!products) {
+    return;
+  }
 
   return (
     <Container>
@@ -25,3 +28,7 @@ const HomePage = async ({
 };
 
 export default HomePage;
+
+HomePage.getInitialProps = async ({}) => {
+  return {};
+};

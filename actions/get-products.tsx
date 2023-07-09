@@ -31,8 +31,8 @@ const getProducts = async (query: Query): Promise<Product[]> => {
   });
   const res = await fetch(url);
 
-  const { products } = await res.json();
   if (res.ok) {
+    const { products } = await res.json();
     let filtered = [...products];
     if (query.stars) {
       filtered = filterProductsByRating(filtered, Number(query.stars));
@@ -44,7 +44,7 @@ const getProducts = async (query: Query): Promise<Product[]> => {
 
     return filtered;
   } else {
-    throw new Error("products api failed");
+    return [];
   }
 };
 
